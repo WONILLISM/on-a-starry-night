@@ -1,7 +1,7 @@
 ---
 name: Issue template
 about: Follow template
-title: ex.) feat: add login
+title: "ex.) feat: add login"
 labels: ""
 assignees: ""
 ---
