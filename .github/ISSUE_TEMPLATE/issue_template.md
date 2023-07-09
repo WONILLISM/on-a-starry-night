@@ -1,7 +1,7 @@
 ---
 name: Issue template
 about: Follow template
-title: "Type title (#issue number)"
+title: ex.) feat: add login
 labels: ""
 assignees: ""
 ---
