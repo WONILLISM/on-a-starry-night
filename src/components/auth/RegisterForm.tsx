@@ -32,7 +32,7 @@ const RegisterForm = () => {
         <section>
           <label>email</label>
           <input
-            name="name"
+            name="email"
             type="email"
             value={values.email}
             onChange={handleValuesChange}
@@ -68,6 +68,7 @@ const RegisterForm = () => {
         <section>
           <label>birth</label>
           <input
+            name="birth"
             type="date"
             value={values.birth}
             onChange={handleValuesChange}
