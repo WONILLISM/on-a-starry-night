@@ -67,11 +67,14 @@ const RegisterForm = () => {
         }
         break;
       case "birth":
-        if (value === "") {
-          console.log("!!!");
+        if (
+          !RegExp(
+            "^(19[0-9][0-9]|20d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"
+          ).test(value)
+        ) {
           setErrors({
             ...errors,
-            [name]: "생일을 입력해주세요.",
+            [name]: "올바르지 않은 날짜 형식입니다.(yyyy-mm-dd)",
           });
         } else {
           setErrors({ ...errors, [name]: "" });
@@ -137,11 +140,11 @@ const RegisterForm = () => {
           <label>birth</label>
           <input
             name="birth"
-            type="date"
+            type="text"
             value={values.birth}
             onChange={handleValuesChange}
           />
-          <div>{!!!errors.birth && errors.birth}</div>
+          <div>{!!values.birth && errors.birth}</div>
         </section>
         <button type="submit">register</button>
       </form>
