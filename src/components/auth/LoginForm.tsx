@@ -1,80 +1,75 @@
-import { ChangeEvent, useState } from "react";
-
-interface LoginValues {
-  email: string;
-  password: string;
-}
-
-const defaultLoginValues: LoginValues = {
-  email: "",
-  password: "",
-};
+import { SubmitHandler, useForm } from "react-hook-form";
+import { LoginFormValues, defaultLoginFormValues } from "../../interface/auth";
 
 const LoginForm = () => {
-  const [values, setValues] = useState<LoginValues>(defaultLoginValues);
-  const [errors, setErrors] = useState<LoginValues>(defaultLoginValues);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    defaultValues: defaultLoginFormValues,
+  });
 
-  const validation = (name: string, value: string) => {
-    switch (name) {
-      case "email":
-        if (
-          !RegExp("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$").test(value)
-        ) {
-          setErrors({ ...errors, [name]: "올바르지 않은 이메일 형식입니다." });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      case "password":
-        if (!RegExp("^.{8,}$").test(value)) {
-          setErrors({
-            ...errors,
-            [name]: "올바르지 않은 비밀번호 형식입니다.",
-          });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleValuesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    validation(name, value);
-
-    setValues({ ...values, [name]: value });
-  };
+  const onSubmit: SubmitHandler<LoginFormValues> = (data) => console.log(data);
 
   return (
     <article>
-      <form>
-        <section>
-          <label>email</label>
-          <input
-            name="email"
-            type="email"
-            value={values.email}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.email && errors.email}</div>
-        </section>
-        <section>
-          <label>password</label>
-          <input
-            name="password"
-            type="password"
-            value={values.password}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.password && errors.password}</div>
-        </section>
-        <button type="submit">login</button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label>email</label>
+        <input
+          {...register("email", {
+            required: true,
+            pattern: {
+              value: /^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$/,
+              message: "invalid email type",
+            },
+          })}
+        />
+        {/* {errors.email?.type === "required" && <p>email is required</p>}
+        {errors.email?.type === "pattern" && <p>invalid email type</p>} */}
+        {errors.email?.message && <p>invalid email type</p>}
+
+        <label>password</label>
+        <input
+          {...register("password", {
+            required: true,
+            minLength: {
+              value: 8,
+              message: "Eeee",
+            },
+          })}
+        />
+        {errors.password?.type === "required" && <p>password is required</p>}
+        <button type="submit">제출</button>
       </form>
     </article>
   );
 };
 
 export default LoginForm;
+
+// const validation = (name: string, value: string) => {
+//   switch (name) {
+//     case "email":
+//       if (
+//         !RegExp("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$").test(value)
+//       ) {
+//         setErrors({ ...errors, [name]: "올바르지 않은 이메일 형식입니다." });
+//       } else {
+//         setErrors({ ...errors, [name]: "" });
+//       }
+//       break;
+//     case "password":
+//       if (!RegExp("^.{8,}$").test(value)) {
+//         setErrors({
+//           ...errors,
+//           [name]: "올바르지 않은 비밀번호 형식입니다.",
+//         });
+//       } else {
+//         setErrors({ ...errors, [name]: "" });
+//       }
+//       break;
+//     default:
+//       break;
+//   }
+// };
