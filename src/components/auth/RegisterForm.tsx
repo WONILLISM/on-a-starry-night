@@ -51,7 +51,7 @@ const RegisterForm = () => {
         />
         <Input
           label="name"
-          name="name"
+          name="username"
           type="text"
           register={register}
           options={{
@@ -61,7 +61,7 @@ const RegisterForm = () => {
               message: "Name is word at least 2.",
             },
           }}
-          errorMsg={errors.name ? errors.name.message : undefined}
+          errorMsg={errors.username ? errors.username.message : undefined}
         />
         <Input
           label="nickname"
