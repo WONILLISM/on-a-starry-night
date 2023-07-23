@@ -11,7 +11,7 @@ export const defaultLoginFormValues: LoginFormValues = {
 export interface RegisterFormValues {
   email: string;
   password: string;
-  name: string;
+  username: string;
   nickname: string;
   birth: string;
   isCeleb: boolean;
@@ -20,7 +20,7 @@ export interface RegisterFormValues {
 export const defaultRegisterFormValues: RegisterFormValues = {
   email: "",
   password: "",
-  name: "",
+  username: "",
   nickname: "",
   birth: "",
   isCeleb: false,
