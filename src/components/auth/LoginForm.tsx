@@ -1,79 +1,54 @@
-import { ChangeEvent, useState } from "react";
-
-interface LoginValues {
-  email: string;
-  password: string;
-}
-
-const defaultLoginValues: LoginValues = {
-  email: "",
-  password: "",
-};
+import { SubmitHandler, useForm } from "react-hook-form";
+import { LoginFormValues, defaultLoginFormValues } from "../../interface/auth";
+import Input from "../common/Input";
 
 const LoginForm = () => {
-  const [values, setValues] = useState<LoginValues>(defaultLoginValues);
-  const [errors, setErrors] = useState<LoginValues>(defaultLoginValues);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    defaultValues: defaultLoginFormValues,
+    mode: "onChange",
+  });
 
-  const validation = (name: string, value: string) => {
-    switch (name) {
-      case "email":
-        if (
-          !RegExp("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$").test(value)
-        ) {
-          setErrors({ ...errors, [name]: "올바르지 않은 이메일 형식입니다." });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      case "password":
-        if (!RegExp("^.{8,}$").test(value)) {
-          setErrors({
-            ...errors,
-            [name]: "올바르지 않은 비밀번호 형식입니다.",
-          });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleValuesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    validation(name, value);
-
-    setValues({ ...values, [name]: value });
-  };
+  const onSubmit: SubmitHandler<LoginFormValues> = (data) => console.log(data);
 
   return (
-    <article>
-      <form>
-        <section>
-          <label>email</label>
-          <input
-            name="email"
-            type="email"
-            value={values.email}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.email && errors.email}</div>
-        </section>
-        <section>
-          <label>password</label>
-          <input
-            name="password"
-            type="password"
-            value={values.password}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.password && errors.password}</div>
-        </section>
-        <button type="submit">login</button>
+    <section>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          label="email"
+          type="text"
+          name="email"
+          register={register}
+          options={{
+            required: { value: true, message: "Email is required." },
+            pattern: {
+              value: /^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$/,
+              message: "Invalid Email type.",
+            },
+          }}
+          errorMsg={errors.email ? errors.email.message : undefined}
+        />
+        <Input
+          label="password"
+          type="password"
+          name="password"
+          register={register}
+          options={{
+            required: { value: true, message: "Password is required." },
+            minLength: {
+              value: 8,
+              message: "Password is at least 8.",
+            },
+          }}
+          errorMsg={errors.password ? errors.password.message : undefined}
+        />
+
+        <button type="submit">제출</button>
       </form>
-    </article>
+    </section>
   );
 };
 

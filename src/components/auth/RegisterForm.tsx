@@ -1,154 +1,101 @@
-import { ChangeEvent, useState } from "react";
-
-interface RegisterValues {
-  email: string;
-  password: string;
-  name: string;
-  nickname: string;
-  birth: string;
-  isCeleb: boolean;
-}
-
-type RegisterValue = keyof RegisterValues;
-
-const defaultRegisterValues: RegisterValues = {
-  email: "",
-  password: "",
-  name: "",
-  nickname: "",
-  birth: "",
-  isCeleb: false,
-};
+import { SubmitHandler, useForm } from "react-hook-form";
+import Input from "../common/Input";
+import {
+  RegisterFormValues,
+  defaultRegisterFormValues,
+} from "../../interface/auth";
 
 const RegisterForm = () => {
-  const [values, setValues] = useState<RegisterValues>(defaultRegisterValues);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormValues>({
+    defaultValues: defaultRegisterFormValues,
+    mode: "onChange",
+  });
 
-  const [errors, setErrors] = useState<RegisterValues>(defaultRegisterValues);
-
-  const validation = (name: RegisterValue, value: string) => {
-    switch (name) {
-      case "email":
-        if (
-          !RegExp("^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$").test(value)
-        ) {
-          setErrors({ ...errors, [name]: "올바르지 않은 이메일 형식입니다." });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      case "password":
-        if (!RegExp("^.{8,}$").test(value)) {
-          setErrors({
-            ...errors,
-            [name]: "올바르지 않은 비밀번호 형식입니다.",
-          });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      case "name":
-        if (!RegExp("^[가-힣a-zA-Z].{1,}$").test(value)) {
-          setErrors({
-            ...errors,
-            [name]: "올바르지 않은 이름 형식입니다.",
-          });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      case "nickname":
-        if (!RegExp("^[a-zA-Z0-9+-_].{2,}$").test(value)) {
-          setErrors({
-            ...errors,
-            [name]: "올바르지 않은 별명 형식입니다.",
-          });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      case "birth":
-        if (
-          !RegExp(
-            "^(19[0-9][0-9]|20d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$"
-          ).test(value)
-        ) {
-          setErrors({
-            ...errors,
-            [name]: "올바르지 않은 날짜 형식입니다.(yyyy-mm-dd)",
-          });
-        } else {
-          setErrors({ ...errors, [name]: "" });
-        }
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleValuesChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    validation(name as RegisterValue, value);
-
-    setValues({ ...values, [name]: value });
-  };
+  const onSubmit: SubmitHandler<RegisterFormValues> = (data) =>
+    console.log(data);
 
   return (
-    <article>
-      <form>
-        <section>
-          <label>email</label>
-          <input
-            name="email"
-            type="email"
-            value={values.email}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.email && errors.email}</div>
-        </section>
-        <section>
-          <label>password</label>
-          <input
-            name="password"
-            type="password"
-            value={values.password}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.password && errors.password}</div>
-        </section>
-        <section>
-          <label>name</label>
-          <input
-            name="name"
-            type="text"
-            value={values.name}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.name && errors.name}</div>
-        </section>
-        <section>
-          <label>nickname</label>
-          <input
-            name="nickname"
-            type="text"
-            value={values.nickname}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.nickname && errors.nickname}</div>
-        </section>
-        <section>
-          <label>birth</label>
-          <input
-            name="birth"
-            type="text"
-            value={values.birth}
-            onChange={handleValuesChange}
-          />
-          <div>{!!values.birth && errors.birth}</div>
-        </section>
+    <section>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          label="email"
+          type="text"
+          name="email"
+          register={register}
+          options={{
+            required: { value: true, message: "Email is required." },
+            pattern: {
+              value: /^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$/,
+              message: "Invalid Email type.",
+            },
+          }}
+          errorMsg={errors.email ? errors.email.message : undefined}
+        />
+        <Input
+          label="password"
+          type="password"
+          name="password"
+          register={register}
+          options={{
+            required: { value: true, message: "Password is required." },
+            minLength: {
+              value: 8,
+              message: "Password is at least 8.",
+            },
+          }}
+          errorMsg={errors.password ? errors.password.message : undefined}
+        />
+        <Input
+          label="name"
+          name="name"
+          type="text"
+          register={register}
+          options={{
+            required: { value: true, message: "Name is required." },
+            pattern: {
+              value: /^[가-힣a-zA-Z].{1,}$/,
+              message: "Name is word at least 2.",
+            },
+          }}
+          errorMsg={errors.name ? errors.name.message : undefined}
+        />
+        <Input
+          label="nickname"
+          name="nickname"
+          type="text"
+          register={register}
+          options={{
+            required: { value: true, message: "Password is required." },
+            pattern: {
+              value: /^[a-zA-Z0-9+-_].{2,}$/,
+              message: "Nickname is word, number or (-,_) at least 2.",
+            },
+          }}
+          errorMsg={errors.nickname ? errors.nickname.message : undefined}
+        />
+        <Input
+          label="birth"
+          name="birth"
+          type="text"
+          register={register}
+          options={{
+            required: { value: true, message: "Password is required." },
+            pattern: {
+              value:
+                /^(19[0-9][0-9]|20d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/,
+              message: "YYYY-MM-DD",
+            },
+          }}
+          errorMsg={errors.birth ? errors.birth.message : undefined}
+        />
+
         <button type="submit">register</button>
       </form>
-    </article>
+    </section>
   );
 };
 
