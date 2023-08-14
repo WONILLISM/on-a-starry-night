@@ -14,7 +14,7 @@ export interface RegisterFormValues {
   username: string;
   nickname: string;
   birth: string;
-  isCeleb: boolean;
+  isCeleb?: boolean;
 }
 
 export const defaultRegisterFormValues: RegisterFormValues = {

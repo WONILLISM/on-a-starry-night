@@ -1,6 +1,9 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginFormValues, defaultLoginFormValues } from "../../interface/auth";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import Input from "../common/Input";
+import { loginSchema } from "../../utils/validationSchema";
 
 const LoginForm = () => {
   const {
@@ -9,6 +12,7 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<LoginFormValues>({
     defaultValues: defaultLoginFormValues,
+    resolver: yupResolver(loginSchema),
     mode: "onChange",
   });
 
@@ -22,13 +26,6 @@ const LoginForm = () => {
           type="text"
           name="email"
           register={register}
-          options={{
-            required: { value: true, message: "Email is required." },
-            pattern: {
-              value: /^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$/,
-              message: "Invalid Email type.",
-            },
-          }}
           errorMsg={errors.email ? errors.email.message : undefined}
         />
         <Input
@@ -36,13 +33,6 @@ const LoginForm = () => {
           type="password"
           name="password"
           register={register}
-          options={{
-            required: { value: true, message: "Password is required." },
-            minLength: {
-              value: 8,
-              message: "Password is at least 8.",
-            },
-          }}
           errorMsg={errors.password ? errors.password.message : undefined}
         />
 

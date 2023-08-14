@@ -1,9 +1,11 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Input from "../common/Input";
 import {
   RegisterFormValues,
   defaultRegisterFormValues,
 } from "../../interface/auth";
+import { registerSchema } from "../../utils/validationSchema";
 
 const RegisterForm = () => {
   const {
@@ -12,6 +14,7 @@ const RegisterForm = () => {
     formState: { errors },
   } = useForm<RegisterFormValues>({
     defaultValues: defaultRegisterFormValues,
+    resolver: yupResolver(registerSchema),
     mode: "onChange",
   });
 
@@ -26,13 +29,6 @@ const RegisterForm = () => {
           type="text"
           name="email"
           register={register}
-          options={{
-            required: { value: true, message: "Email is required." },
-            pattern: {
-              value: /^[a-zA-Z0-9+-_]+@[a-zA-Z0-9-_]+[.]+[a-zA-Z]+$/,
-              message: "Invalid Email type.",
-            },
-          }}
           errorMsg={errors.email ? errors.email.message : undefined}
         />
         <Input
@@ -40,27 +36,13 @@ const RegisterForm = () => {
           type="password"
           name="password"
           register={register}
-          options={{
-            required: { value: true, message: "Password is required." },
-            minLength: {
-              value: 8,
-              message: "Password is at least 8.",
-            },
-          }}
           errorMsg={errors.password ? errors.password.message : undefined}
         />
         <Input
-          label="name"
+          label="username"
           name="username"
           type="text"
           register={register}
-          options={{
-            required: { value: true, message: "Name is required." },
-            pattern: {
-              value: /^[가-힣a-zA-Z].{1,}$/,
-              message: "Name is word at least 2.",
-            },
-          }}
           errorMsg={errors.username ? errors.username.message : undefined}
         />
         <Input
@@ -68,13 +50,6 @@ const RegisterForm = () => {
           name="nickname"
           type="text"
           register={register}
-          options={{
-            required: { value: true, message: "Password is required." },
-            pattern: {
-              value: /^[a-zA-Z0-9+-_].{2,}$/,
-              message: "Nickname is word, number or (-,_) at least 2.",
-            },
-          }}
           errorMsg={errors.nickname ? errors.nickname.message : undefined}
         />
         <Input
@@ -82,14 +57,6 @@ const RegisterForm = () => {
           name="birth"
           type="text"
           register={register}
-          options={{
-            required: { value: true, message: "Password is required." },
-            pattern: {
-              value:
-                /^(19[0-9][0-9]|20d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/,
-              message: "YYYY-MM-DD",
-            },
-          }}
           errorMsg={errors.birth ? errors.birth.message : undefined}
         />
 
