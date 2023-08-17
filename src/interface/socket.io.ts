@@ -12,14 +12,15 @@
  */
 
 export interface ServerToClientEvents {
+  ROOM_LIST: (rooms: Rooms) => void;
   JOINED_ROOM: (data: ChatData) => void;
   RECIEVED_CELB_MESSAGE: (data: ChatData) => void;
   RECIEVED_FAN_MESSAGE: (data: ChatData) => void;
 }
 
 export interface ClientToServerEvents {
-  CREATE_ROOM: (data: ChatData) => void;
-  JOIN_ROOM: (data: ChatData) => void;
+  CREATE_ROOM: ({ title }: { title: string }) => void;
+  JOIN_ROOM: (room: Room) => void;
   SEND_CELB_MESSAGE: (data: ChatData) => void;
   SEND_FAN_MESSAGE: (data: ChatData) => void;
 }
@@ -31,3 +32,8 @@ export interface ChatData {
   username: string;
   message: string;
 }
+
+export interface Room {
+  title: string;
+}
+export type Rooms = Record<string, Room>;
