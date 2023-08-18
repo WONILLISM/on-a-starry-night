@@ -2,14 +2,67 @@ import { useState } from "react";
 import useSocket from "../hooks/useSocket";
 import { useNavigate } from "react-router-dom";
 
+const CreateRoom = ({
+  handleCreateRoom,
+}: {
+  handleCreateRoom: (title: string) => void;
+}) => {
+  const [title, setTitle] = useState<string>("");
+  const [toggle, setToggle] = useState<boolean>(false);
+
+  if (!toggle) {
+    return (
+      <div>
+        <button
+          onClick={() => {
+            setToggle(true);
+          }}
+        >
+          Create Room
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <input
+        value={title}
+        onChange={(e) => {
+          const { value } = e.target;
+          setTitle(value);
+        }}
+      />
+      <button
+        onClick={() => {
+          handleCreateRoom(title);
+          setToggle(false);
+        }}
+      >
+        Create
+      </button>
+      <button
+        onClick={() => {
+          setToggle(false);
+        }}
+      >
+        Cancel
+      </button>
+    </div>
+  );
+};
+
 const Chat = () => {
   const { socket, isConnected, rooms } = useSocket();
-  const [cnt, setCnt] = useState<number>(0);
   const navigate = useNavigate();
 
   const handleJoinRoom = (key: string) => {
     socket.emit("JOIN_ROOM", rooms[key]);
     navigate(`${key}`);
+  };
+
+  const handleCreateRoom = (title: string) => {
+    socket.emit("CREATE_ROOM", { title: title });
   };
 
   if (!isConnected) return <div>Loading ...</div>;
@@ -28,14 +81,7 @@ const Chat = () => {
           </button>
         ))}
       </div>
-      <button
-        onClick={() => {
-          socket.emit("CREATE_ROOM", { title: `room ${cnt}` });
-          setCnt(cnt + 1);
-        }}
-      >
-        create room
-      </button>
+      <CreateRoom handleCreateRoom={handleCreateRoom} />
     </>
   );
 };

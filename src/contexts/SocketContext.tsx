@@ -1,4 +1,4 @@
-import { ChatData, Rooms } from "../interface/socket.io";
+import { SocketData, Rooms } from "../interface/socket.io";
 import { Socket, io } from "socket.io-client";
 import {
   ClientToServerEvents,
@@ -11,7 +11,7 @@ interface SocketState {
   socket: Socket<ServerToClientEvents, ClientToServerEvents>;
   isConnected: boolean;
   username?: string;
-  chatdata?: ChatData;
+  chatdata?: SocketData;
   rooms: Rooms;
 }
 

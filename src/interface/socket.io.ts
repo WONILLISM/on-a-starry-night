@@ -13,27 +13,30 @@
 
 export interface ServerToClientEvents {
   ROOM_LIST: (rooms: Rooms) => void;
-  JOINED_ROOM: (data: ChatData) => void;
-  RECIEVED_CELB_MESSAGE: (data: ChatData) => void;
-  RECIEVED_FAN_MESSAGE: (data: ChatData) => void;
+  JOINED_ROOM: (roomId: string) => void;
+  RECIEVED_CELB_MESSAGE: (message: Message) => void;
+  RECIEVED_FAN_MESSAGE: (message: Message) => void;
 }
 
 export interface ClientToServerEvents {
   CREATE_ROOM: ({ title }: { title: string }) => void;
   JOIN_ROOM: (room: Room) => void;
-  SEND_CELB_MESSAGE: (data: ChatData) => void;
-  SEND_FAN_MESSAGE: (data: ChatData) => void;
+  SEND_CELB_MESSAGE: (message: Message) => void;
+  SEND_FAN_MESSAGE: (message: Message) => void;
 }
 
-export interface InterServerEvents {}
-
-export interface ChatData {
-  event: string;
-  username: string;
-  message: string;
-}
+export type SocketData = Rooms | Room | Messages | Message;
 
 export interface Room {
   title: string;
 }
+
+export interface Message {
+  username: string;
+  content: string;
+}
+
 export type Rooms = Record<string, Room>;
+export type Messages = Message[];
+
+export type SocketEvent = keyof ClientToServerEvents;
