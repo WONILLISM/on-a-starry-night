@@ -47,9 +47,11 @@ const MessageForm = ({
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit({ username: username, content: message });
+          setMessage("");
         }}
       >
         <textarea
+          value={message}
           onChange={(e) => {
             const { value } = e.target;
             setMessage(value);
@@ -64,7 +66,7 @@ const MessageForm = ({
 };
 
 const ChatRoom = () => {
-  const { isConnected, sendMessage, messages } = useSocket();
+  const { isConnected, sendMessage, messages, roomId } = useSocket();
 
   if (!isConnected) return <div>Loading...</div>;
 
@@ -72,6 +74,7 @@ const ChatRoom = () => {
     sendMessage("SEND_CELB_MESSAGE", message);
   };
 
+  console.log(roomId);
   return (
     <div>
       <div>ChatRoom</div>

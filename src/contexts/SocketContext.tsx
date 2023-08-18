@@ -1,4 +1,4 @@
-import { SocketData, Rooms } from "../interface/socket.io";
+import { Message, Messages, Rooms } from "../interface/socket.io";
 import { Socket, io } from "socket.io-client";
 import {
   ClientToServerEvents,
@@ -11,13 +11,16 @@ interface SocketState {
   socket: Socket<ServerToClientEvents, ClientToServerEvents>;
   isConnected: boolean;
   username?: string;
-  chatdata?: SocketData;
+  roomId: string;
   rooms: Rooms;
+  messages: Messages;
 }
 
 type SocketAction =
   | { type: "CONNECT"; payload: boolean }
-  | { type: "GET_ROOM_LIST"; payload: Rooms };
+  | { type: "GET_ROOM_LIST"; payload: Rooms }
+  | { type: "JOIN_ROOM"; payload: string }
+  | { type: "SAVE_MESSAGE"; payload: Message };
 
 const URL = "http://localhost:4000";
 
@@ -27,6 +30,8 @@ const defaultSocketState: SocketState = {
   isConnected: false,
   socket: socket,
   rooms: {},
+  messages: [],
+  roomId: "",
 };
 
 const socketReducer: Reducer<SocketState, SocketAction> = (
@@ -43,6 +48,18 @@ const socketReducer: Reducer<SocketState, SocketAction> = (
       return {
         ...state,
         rooms: action.payload,
+      };
+    }
+    case "JOIN_ROOM": {
+      return {
+        ...state,
+        roomId: action.payload,
+      };
+    }
+    case "SAVE_MESSAGE": {
+      return {
+        ...state,
+        messages: [...state.messages, action.payload],
       };
     }
     default: {

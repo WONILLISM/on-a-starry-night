@@ -53,16 +53,16 @@ const CreateRoom = ({
 };
 
 const Chat = () => {
-  const { socket, isConnected, rooms } = useSocket();
+  const { isConnected, rooms, createRoom, joinRoom } = useSocket();
   const navigate = useNavigate();
 
   const handleJoinRoom = (key: string) => {
-    socket.emit("JOIN_ROOM", rooms[key]);
+    joinRoom(key);
     navigate(`${key}`);
   };
 
   const handleCreateRoom = (title: string) => {
-    socket.emit("CREATE_ROOM", { title: title });
+    createRoom(title);
   };
 
   if (!isConnected) return <div>Loading ...</div>;

@@ -20,12 +20,10 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   CREATE_ROOM: ({ title }: { title: string }) => void;
-  JOIN_ROOM: (room: Room) => void;
-  SEND_CELB_MESSAGE: (message: Message) => void;
-  SEND_FAN_MESSAGE: (message: Message) => void;
+  JOIN_ROOM: (roomId: string) => void;
+  SEND_CELB_MESSAGE: (data: { roomId: string; message: Message }) => void;
+  SEND_FAN_MESSAGE: (data: { roomId: string; message: Message }) => void;
 }
-
-export type SocketData = Rooms | Room | Messages | Message;
 
 export interface Room {
   title: string;

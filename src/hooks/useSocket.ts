@@ -1,24 +1,32 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   SocketDispatchContext,
   SocketStateContext,
 } from "../contexts/SocketContext";
-import { Message, Messages, Rooms, SocketEvent } from "../interface/socket.io";
+import { Message, Rooms, SocketEvent } from "../interface/socket.io";
 
 const useSocket = () => {
   const state = useContext(SocketStateContext);
   const dispatch = useContext(SocketDispatchContext);
 
-  const [messages, setMessages] = useState<Messages>([]);
-
-  const { isConnected, socket, username, chatdata, rooms } = state;
+  const { isConnected, socket, username, rooms, roomId, messages } = state;
 
   if (!dispatch) {
     throw "useSocket must be in SocketProvider.";
   }
 
+  const createRoom = (title: string) => {
+    socket.emit("CREATE_ROOM", { title: title });
+  };
+
+  const joinRoom = (roomId: string) => {
+    socket.emit("JOIN_ROOM", roomId);
+  };
+
   const sendMessage = (event: SocketEvent, message: Message) => {
-    socket.emit(event, message);
+    if (roomId) {
+      socket.emit(event, { roomId, message });
+    }
   };
 
   useEffect(() => {
@@ -31,11 +39,11 @@ const useSocket = () => {
     };
     const onJoinedRoom = (roomId: string) => {
       console.log(roomId);
+      dispatch({ type: "JOIN_ROOM", payload: roomId });
     };
     const onRecievedCelbMessage = (message: Message) => {
       console.log(message.content);
-
-      setMessages((prev) => [...prev, message]);
+      dispatch({ type: "SAVE_MESSAGE", payload: message });
     };
 
     socket.on("connect", onConnect);
@@ -54,10 +62,12 @@ const useSocket = () => {
   return {
     socket,
     username,
-    chatdata,
     rooms,
+    roomId,
     messages,
     isConnected,
+    createRoom,
+    joinRoom,
     sendMessage,
   };
 };
