@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import ChatRoom from "./pages/ChatRoom";
+import ThemeConfig from "./theme";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   { path: "/", element: <></> },
 ]);
 
-const App = () => <RouterProvider router={router} />;
+const App = () => (
+  <ThemeConfig>
+    <RouterProvider router={router} />
+  </ThemeConfig>
+);
 
 export default App;
