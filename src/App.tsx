@@ -7,10 +7,11 @@ import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import ChatRoom from "./pages/ChatRoom";
 import ThemeConfig from "./theme";
+import Main from "./pages/Main";
+import MainLayout from "./components/layout/Main";
 
 const router = createBrowserRouter([
   {
-    path: "/",
     element: <AuthLayout />,
     children: [
       { path: "/login", element: <Login /> },
@@ -31,7 +32,11 @@ const router = createBrowserRouter([
       },
     ],
   },
-  { path: "/", element: <></> },
+  {
+    path: "/app",
+    element: <MainLayout />,
+    children: [{ path: "main", element: <Main /> }],
+  },
 ]);
 
 const App = () => (
