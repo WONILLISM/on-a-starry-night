@@ -8,7 +8,7 @@ import { Dispatch, Reducer, createContext, useReducer } from "react";
 import { Outlet } from "react-router-dom";
 
 interface SocketState {
-  socket: Socket<ServerToClientEvents, ClientToServerEvents>;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
   isConnected: boolean;
   username?: string;
   roomId: string;
@@ -24,11 +24,9 @@ type SocketAction =
 
 const URL = "http://localhost:4000";
 
-const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(URL);
-
 const defaultSocketState: SocketState = {
   isConnected: false,
-  socket: socket,
+  socket: null,
   rooms: {},
   messages: [],
   roomId: "",
@@ -75,10 +73,12 @@ export const SocketDispatchContext =
   createContext<Dispatch<SocketAction> | null>(null);
 
 const SocketProvider = () => {
-  // const [state, setState] = useState<SocketState>(defaultSocketState);
-  const [state, dispatch] = useReducer(socketReducer, defaultSocketState);
+  const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(URL);
 
-  console.log(state);
+  const [state, dispatch] = useReducer(socketReducer, {
+    ...defaultSocketState,
+    socket: socket,
+  });
 
   return (
     <SocketStateContext.Provider value={state}>
