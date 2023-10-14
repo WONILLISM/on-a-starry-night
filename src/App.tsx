@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import ChatRoom from "./pages/ChatRoom";
-import ThemeConfig from "./theme";
+import ThemeConfig from "./themes";
 import Main from "./pages/Main";
 import MainLayout from "./components/layout/Main";
 

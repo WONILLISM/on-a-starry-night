@@ -7,7 +7,11 @@ import {
 } from "../../interface/auth";
 import { registerSchema } from "../../utils/validationSchema";
 
-const RegisterForm = () => {
+interface RegisterFormProps {
+  signUp: (form: RegisterFormValues) => void;
+}
+
+const RegisterForm = ({ signUp }: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
@@ -18,8 +22,10 @@ const RegisterForm = () => {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = (data) =>
+  const onSubmit: SubmitHandler<RegisterFormValues> = (data) => {
     console.log(data);
+    signUp(data);
+  };
 
   return (
     <section>
