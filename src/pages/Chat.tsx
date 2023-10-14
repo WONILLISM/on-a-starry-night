@@ -65,7 +65,7 @@ const Chat = () => {
     createRoom(title);
   };
 
-  if (!isConnected) return <div>connecting to chat server ...</div>;
+  if (!isConnected) return <div>Loading ...</div>;
 
   return (
     <>
